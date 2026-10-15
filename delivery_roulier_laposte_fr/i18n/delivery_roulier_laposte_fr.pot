@@ -262,3 +262,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_roulier_laposte_fr.selection__carrier_account__laposte_fr_file_format__zpl_10x15_300dpi
 msgid "ZPL 10x15 300dpi"
 msgstr ""
+
+#. module: delivery_roulier_laposte_fr
+#. odoo-python
+#: code:addons/delivery_roulier_laposte_fr/models/stock_quant_package.py:0
+msgid ""
+"Test environment: no request was sent to Colissimo, the label and the "
+"tracking number are simulated. Do not stick this label on a parcel."
+msgstr ""
+
+#. module: delivery_roulier_laposte_fr
+#: model_terms:ir.ui.view,arch_db:delivery_roulier_laposte_fr.view_delivery_carrier_form_laposte_fr
+msgid ""
+"Colissimo has no test service. In the test environment, labels and tracking "
+"numbers are simulated and nothing is sent to Colissimo. Switch to the "
+"production environment to generate real labels."
+msgstr ""
+

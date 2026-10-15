@@ -84,6 +84,8 @@ class LaposteLabelDomCase(VCRMixin, carrier_label_case.TestCarrierLabel):
             }
         )
         self._get_carrier().carrier_account_id = self.account
+        # the cassettes were recorded against the production web service
+        self._get_carrier().prod_environment = True
         return super()._create_order_picking()
 
     def _get_carrier(self):

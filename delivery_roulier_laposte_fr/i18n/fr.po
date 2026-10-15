@@ -1,0 +1,38 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_roulier_laposte_fr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: delivery_roulier_laposte_fr
+#. odoo-python
+#: code:addons/delivery_roulier_laposte_fr/models/stock_quant_package.py:0
+msgid ""
+"Test environment: no request was sent to Colissimo, the label and the "
+"tracking number are simulated. Do not stick this label on a parcel."
+msgstr ""
+"Environnement de test : aucune demande n'a été envoyée à Colissimo, "
+"l'étiquette et le numéro de suivi sont simulés. Ne collez pas cette "
+"étiquette sur un colis."
+
+#. module: delivery_roulier_laposte_fr
+#: model_terms:ir.ui.view,arch_db:delivery_roulier_laposte_fr.view_delivery_carrier_form_laposte_fr
+msgid ""
+"Colissimo has no test service. In the test environment, labels and tracking "
+"numbers are simulated and nothing is sent to Colissimo. Switch to the "
+"production environment to generate real labels."
+msgstr ""
+"Colissimo ne propose pas d'environnement de test. En environnement de test, "
+"les étiquettes et les numéros de suivi sont simulés et rien n'est envoyé à "
+"Colissimo. Passez en production pour générer de vraies étiquettes."
+
