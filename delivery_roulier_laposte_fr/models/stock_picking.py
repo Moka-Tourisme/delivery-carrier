@@ -45,6 +45,14 @@ class StockPicking(models.Model):
         "field with a dedicated view",
     )
 
+    def get_shipping_label_values(self, label):
+        vals = super().get_shipping_label_values(label)
+        # The IoT auto print of Odoo only picks the attachments of a delivery
+        # order whose name starts with "Label"
+        if self.delivery_type == "laposte_fr" and not vals["name"].startswith("Label"):
+            vals["name"] = "Label-%s" % vals["name"]
+        return vals
+
     @api.depends("option_ids")
     def _compute_check_options(self):
         insurance_opt = self.env.ref(
