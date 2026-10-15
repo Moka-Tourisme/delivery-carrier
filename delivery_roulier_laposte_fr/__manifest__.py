@@ -4,7 +4,7 @@
 
 {
     "name": "Delivery Carrier La Poste (fr)",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "summary": "Generate Label for La Poste/Colissimo",
     "author": "Akretion,Odoo Community Association (OCA)",
     "maintainers": ["florian-dacosta"],
@@ -18,6 +18,7 @@
     "data": [
         "data/delivery.xml",
         "views/carrier_account_views.xml",
+        "views/delivery_carrier_views.xml",
         "views/stock_picking.xml",
     ],
     "external_dependencies": {
