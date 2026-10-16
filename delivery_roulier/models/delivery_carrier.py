@@ -48,14 +48,18 @@ class DeliveryCarrier(models.Model):
             )
 
     def rate_shipment(self, order):
-        res = super().rate_shipment(order)
-        # for roulier carrier, usually getting the price by carrier webservice
-        # is usually not available for now. Avoid failure in that case.
-        if not res and self._is_roulier():
-            res = {
+        self.ensure_one()
+        # The webservice of a roulier carrier usually returns no price. The base
+        # delivery then answers "this delivery method is not available", which
+        # makes the method unusable on a quotation: answer a null price instead.
+        if self._is_roulier() and not hasattr(
+            self, "%s_rate_shipment" % self.delivery_type
+        ):
+            return {
                 "success": True,
                 "price": 0.0,
+                "carrier_price": 0.0,
                 "error_message": False,
                 "warning_message": False,
             }
-        return res
+        return super().rate_shipment(order)
