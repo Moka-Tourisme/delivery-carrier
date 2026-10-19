@@ -13,7 +13,16 @@ class DeliveryCarrier(models.Model):
     def send_shipping(self, pickings):
         self.ensure_one()
         if self._is_roulier():
-            return pickings._roulier_generate_labels()
+            res = pickings._roulier_generate_labels()
+            # The webservice returns no price: take it from the price method
+            # (delivery_price_method) when there is one, as it would not be
+            # called otherwise.
+            price_method = getattr(self, "price_method", "carrier")
+            if price_method in ("fixed", "base_on_rule"):
+                rates = getattr(self, "%s_send_shipping" % price_method)(pickings)
+                for index, rate in enumerate(rates):
+                    res[index]["exact_price"] = rate["exact_price"]
+            return res
         return super().send_shipping(pickings)
 
     def _is_roulier(self):

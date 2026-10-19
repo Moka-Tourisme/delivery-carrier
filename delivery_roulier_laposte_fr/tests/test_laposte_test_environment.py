@@ -70,6 +70,24 @@ class LaposteTestEnvironmentCase(carrier_label_case.CarrierLabelCase):
             any("simulated" in message.body for message in self.picking.message_ids)
         )
 
+    def test_price_method_sets_the_price_of_the_label(self):
+        """The price of the rules is the cost of the shipping, not the null one."""
+        carrier = self._get_carrier()
+        if "price_method" not in carrier._fields:
+            self.skipTest("delivery_price_method is not installed")
+        self.env["delivery.price.rule"].create(
+            {
+                "carrier_id": carrier.id,
+                "variable": "weight",
+                "operator": ">=",
+                "max_value": 0.0,
+                "list_base_price": 10.0,
+            }
+        )
+        carrier.write({"price_method": "base_on_rule", "prod_environment": False})
+        self.picking.send_to_shipper()
+        self.assertEqual(self.picking.carrier_price, 10.0)
+
     def test_production_environment_calls_colissimo(self):
         """In production the request still goes through roulier."""
         self._get_carrier().prod_environment = True
