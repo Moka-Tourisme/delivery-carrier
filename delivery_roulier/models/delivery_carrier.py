@@ -13,7 +13,16 @@ class DeliveryCarrier(models.Model):
     def send_shipping(self, pickings):
         self.ensure_one()
         if self._is_roulier():
-            return pickings._roulier_generate_labels()
+            res = pickings._roulier_generate_labels()
+            # The webservice returns no price: take it from the price method
+            # (delivery_price_method) when there is one, as it would not be
+            # called otherwise.
+            price_method = getattr(self, "price_method", "carrier")
+            if price_method in ("fixed", "base_on_rule"):
+                rates = getattr(self, "%s_send_shipping" % price_method)(pickings)
+                for index, rate in enumerate(rates):
+                    res[index]["exact_price"] = rate["exact_price"]
+            return res
         return super().send_shipping(pickings)
 
     def _is_roulier(self):
@@ -48,14 +57,21 @@ class DeliveryCarrier(models.Model):
             )
 
     def rate_shipment(self, order):
-        res = super().rate_shipment(order)
-        # for roulier carrier, usually getting the price by carrier webservice
-        # is usually not available for now. Avoid failure in that case.
-        if not res and self._is_roulier():
-            res = {
+        self.ensure_one()
+        # The webservice of a roulier carrier usually returns no price. The base
+        # delivery then answers "this delivery method is not available", which
+        # makes the method unusable on a quotation: answer a null price instead.
+        # Unless a price method (delivery_price_method) computes the price itself.
+        if (
+            self._is_roulier()
+            and not hasattr(self, "%s_rate_shipment" % self.delivery_type)
+            and getattr(self, "price_method", "carrier") == "carrier"
+        ):
+            return {
                 "success": True,
                 "price": 0.0,
+                "carrier_price": 0.0,
                 "error_message": False,
                 "warning_message": False,
             }
-        return res
+        return super().rate_shipment(order)
