@@ -91,3 +91,13 @@ class LaposteLabelFranceCase(VCRMixin, carrier_label_case.TestCarrierLabel):
             }
         )
         return data
+
+    def test_labels(self):
+        super().test_labels()
+        # the IoT auto print of Odoo only picks the attachments named "Label..."
+        labels = self.env["shipping.label"].search(
+            [("res_model", "=", "stock.picking"), ("res_id", "=", self.picking.id)]
+        )
+        self.assertTrue(labels)
+        for label in labels:
+            self.assertTrue(label.attachment_id.name.startswith("Label"), label.name)
