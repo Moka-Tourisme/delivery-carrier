@@ -52,8 +52,11 @@ class DeliveryCarrier(models.Model):
         # The webservice of a roulier carrier usually returns no price. The base
         # delivery then answers "this delivery method is not available", which
         # makes the method unusable on a quotation: answer a null price instead.
-        if self._is_roulier() and not hasattr(
-            self, "%s_rate_shipment" % self.delivery_type
+        # Unless a price method (delivery_price_method) computes the price itself.
+        if (
+            self._is_roulier()
+            and not hasattr(self, "%s_rate_shipment" % self.delivery_type)
+            and getattr(self, "price_method", "carrier") == "carrier"
         ):
             return {
                 "success": True,
